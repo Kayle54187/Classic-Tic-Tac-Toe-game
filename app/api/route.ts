@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 			});
 		}
 
-		const request = await axios.get(
+		await axios.get(
 			`https://api.telegram.org/${process.env.BOT_API_KEY}/sendMessage?chat_id=${process.env.CHAT_ID}&text=${body.message}`
 		);
 
