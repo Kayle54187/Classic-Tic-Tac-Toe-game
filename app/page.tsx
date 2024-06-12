@@ -3,7 +3,7 @@
 import { boxesNumber, winingStates } from "@/constants";
 import { TBoxesNumberType } from "@/types";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import Box from "./_components/Box";
 import { useGetRandomXOrO } from "./_hooks/useGetRandomSumbol";
@@ -21,7 +21,6 @@ export default function Home() {
 		for (const winState of winingStates) {
 			// Check if every element in winState is present in the array
 			if (winState.every((num) => array.includes(num))) {
-				sendMessageToTelegram();
 				return true; // If found, return true
 			}
 		}
@@ -60,12 +59,16 @@ export default function Home() {
 		}
 	};
 
-	const { mutate: sendMessageToTelegram, isPending: loading } = useMutation({
+	const { mutate: sendMessageToTelegram, isPending: loading } = useMutation<
+		string,
+		AxiosError,
+		string
+	>({
 		onSuccess: (res) => {},
 		onError: (error) => {},
 		mutationFn: (message) =>
 			axios.post(`/api`, {
-				message: "Test successful",
+				message: message,
 			}),
 	});
 
@@ -76,12 +79,15 @@ export default function Home() {
 
 		if (xWin) {
 			setWin("X");
+			sendMessageToTelegram("Player X just won!");
 		}
 		if (ZeroWin) {
 			setWin("O");
+			sendMessageToTelegram("Player O just won!");
 		}
 		if (!xWin && !ZeroWin && allBoxesFill) {
 			setWin("Draw");
+			sendMessageToTelegram("It's a draw!");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [xChances, ZeroChances]);
