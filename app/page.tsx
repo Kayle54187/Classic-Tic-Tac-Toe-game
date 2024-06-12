@@ -1,10 +1,12 @@
 "use client";
 
-import { TBoxesNumberType } from "@/types";
-import Box from "./_components/Box";
-import { useEffect, useState } from "react";
 import { boxesNumber, winingStates } from "@/constants";
+import { TBoxesNumberType } from "@/types";
+import { useEffect, useState } from "react";
+import Box from "./_components/Box";
 import { useGetRandomXOrO } from "./_hooks/useGetRandomSumbol";
+import { useMutation } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
 
 export default function Home() {
 	const randomSymbol = useGetRandomXOrO();
@@ -19,6 +21,7 @@ export default function Home() {
 		for (const winState of winingStates) {
 			// Check if every element in winState is present in the array
 			if (winState.every((num) => array.includes(num))) {
+				sendMessageToTelegram();
 				return true; // If found, return true
 			}
 		}
@@ -56,6 +59,15 @@ export default function Home() {
 			setCurrentChance("X");
 		}
 	};
+
+	const { mutate: sendMessageToTelegram, isPending: loading } = useMutation({
+		onSuccess: (res) => {},
+		onError: (error) => {},
+		mutationFn: (message) =>
+			axios.post(`/api`, {
+				message: "Test successful",
+			}),
+	});
 
 	useEffect(() => {
 		const xWin = checkWinningCondition(xChances);
