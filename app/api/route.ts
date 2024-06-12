@@ -1,6 +1,5 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
-import { Telegraf } from "telegraf";
 
 export async function POST(req: Request) {
 	try {
@@ -15,7 +14,7 @@ export async function POST(req: Request) {
 		}
 
 		const request = await axios.get(
-			`https://api.telegram.org/${process.env.BOT_API_KEY}/sendMessage?chat_id=${process.env.CHANNEL}&text=${body.message}`
+			`https://api.telegram.org/${process.env.BOT_API_KEY}/sendMessage?chat_id=${process.env.CHAT_ID}&text=${body.message}`
 		);
 
 		return new NextResponse("Message Sent", {

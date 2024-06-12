@@ -2,11 +2,11 @@
 
 import { boxesNumber, winingStates } from "@/constants";
 import { TBoxesNumberType } from "@/types";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import Box from "./_components/Box";
 import { useGetRandomXOrO } from "./_hooks/useGetRandomSumbol";
-import { useMutation } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
 
 export default function Home() {
 	const randomSymbol = useGetRandomXOrO();
